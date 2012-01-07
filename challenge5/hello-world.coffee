@@ -11,10 +11,11 @@
 
 split_amount = (total, number_of_people) -> 
 	number_of_people = parseInt(number_of_people)
-	total = parseInt(total)
+	total = parseFloat(total)
+	amount = total / number_of_people
 	
-	if number_of_people > 0
-		total / number_of_people
+	if isFinite(amount)
+		amount
 	else
 		0
 
@@ -22,5 +23,15 @@ split_amount = (total, number_of_people) ->
 # Good luck :-)
 
 # Test:
-# ...
-
+console.log "================== CHALLENGE 4 - Test of Edge Cases ================="
+console.log "1) split_amount(0, 0) should equal              0" + " / " + split_amount(0,0) + " is the result"
+console.log "2) split_amount(\"10\", \"2\") should equal integer 5" + " / " + split_amount("10","2") + " is the result"
+console.log "================= End of Test - CHALLENGE 4         ================="
+console.log ""
+console.log "================== CHALLENGE 5 - Test of Edge Cases ================="
+console.log "1) split_amount(\"\", \"\") should equal     0" + " / " + split_amount("", "") + " is the result"
+console.log "2) split_amount(null, 3) should equal    0" + " / " + split_amount(0, 3) + " is the result"
+console.log "3) split_amount(100, null) should equal  0" + " / " + split_amount(100, null) + " is the result"
+console.log "4) split_amount(100.5, 2) should equal   50.25" + " / " + split_amount(100.5,2)  + " is the result"
+console.log "5) split_amount(\"a12\", 2) should equal   0" + " / " + split_amount("a12", 2) + " is the result"
+console.log "================= End of Test - CHALLENGE 5         ================="
