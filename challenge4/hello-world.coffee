@@ -18,3 +18,5 @@ split_amount = (total, number_of_people) ->
 console.log split_amount(100,4)
 console.log split_amount("100","4")
 console.log split_amount(0,0)
+
+# GOOD JOB!
