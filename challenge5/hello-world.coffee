@@ -35,3 +35,28 @@ console.log "3) split_amount(100, null) should equal  0" + " / " + split_amount(
 console.log "4) split_amount(100.5, 2) should equal   50.25" + " / " + split_amount(100.5,2)  + " is the result"
 console.log "5) split_amount(\"a12\", 2) should equal   0" + " / " + split_amount("a12", 2) + " is the result"
 console.log "================= End of Test - CHALLENGE 5         ================="
+
+# Very nice! You just earned +10 extra credit bonus points. Good job!
+
+# ===============================================================================
+# Challenge 5 continued (advanced)
+# ===============================================================================
+#
+# In a class inside the tally.io app, we would like to use your method. It would therefore be nice if we could include your code likes this:
+# {Utility} = require './Utility'
+#
+# and call your method like this:
+# Utility.split_amount(100, 5)
+#
+# This will give us a very nice sepration of concerns (decoupling) and a nice place where we can maintain our utility methods.
+#
+# Can you think of a way to do this? You are encourage to create two new files. One where you put your method and another one where you show how to use your method.
+#
+# hint: The skeleton code of your utility file should look something like this:
+# =================================
+# root = exports ? window # Don't worry to much about this yet. It sets the global variable root to either exports or window depending on whether you're running your code in the command line (through NodeJS) or in a browser.
+#  
+# ' you fill this out
+#
+# root.Utility = Utility # Makes your utility file available to other files.
+# =================================
