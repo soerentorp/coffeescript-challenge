@@ -2,6 +2,7 @@ Challenge 6 — Make input fields computable
 ======
 
 In this challenge you're going to implement a calculator we can use to make input fields computable. This way people can type in fx:
+
     200 - 23 + 2 * 34
 
 and get the result right away instead of pulling out their own calculator.
@@ -16,9 +17,11 @@ To make this work, you need to install jasmine node. So fire up your terminal an
     npm install jasmine-node
 
 To see if it works, just type:
+
     jasmine-node
 
 It should return something like this:
+
     SAGE: jasmine-node [--color|--noColor] [--verbose] [--coffee] directory
 
     Options:
@@ -34,6 +37,7 @@ Running the tests
 ------
 
 To run you test, inside the `challenge6` dir, type:
+
     jasmine-node --coffee specs
 
 This tells the jasmine-node program at we use coffeescript and our `specs` dir.
