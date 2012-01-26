@@ -17,10 +17,10 @@ describe 'Calculator', ->
     it 'can add', ->
       calculator = new Calculator('2+2')
       expect(calculator.result()).toEqual 4
-    it 'can multiply'
-    it 'can divide'
-    it 'returns 0 when letters are included in input string'
-    it 'returns 0 when illegal symbols are included in input string'
+    it 'can multiply', ->
+    it 'can divide', ->
+    it 'returns 0 when letters are included in input string', ->
+    it 'returns 0 when illegal symbols are included in input string', ->
     # ...
 
   # Spec you old split_amount method. Note: I have renamed it to split.
@@ -28,5 +28,5 @@ describe 'Calculator', ->
     it 'splits a number into a given number of parts', ->
       expect(Calculator.split(100, 2)).toEqual 50
 
-    it 'returns 0 when...'
+    it 'returns 0 when...', ->
     # ...

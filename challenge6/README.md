@@ -22,7 +22,7 @@ To see if it works, just type:
 
 It should return something like this:
 
-    SAGE: jasmine-node [--color|--noColor] [--verbose] [--coffee] directory
+    USAGE: jasmine-node [--color|--noColor] [--verbose] [--coffee] directory
 
     Options:
       --color            - use color coding for output
