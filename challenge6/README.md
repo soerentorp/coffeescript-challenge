@@ -19,6 +19,10 @@ To make this work, you need to install jasmine node. So fire up your terminal an
 To see if it works, just type:
 
     jasmine-node
+    
+or if it does not work, type:
+    
+     ./node_modules/jasmine-node/bin/jasmine-node
 
 It should return something like this:
 
