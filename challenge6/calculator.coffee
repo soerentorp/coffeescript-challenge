@@ -4,18 +4,19 @@ class Calculator
   constructor: (@input, @base) ->
 
   result: ->
-    if Calculator.legal_characters(@input)
-      if /^[\+\-\*\/]/g.test(@input)
-        number = eval(@base + @input)
+    input = @input.replace(/\s/g, "") # remove white spaces
+    if Calculator.legal_characters(input)
+      if /^[\+\-\*\/]/g.test(input) # check for + - * / characters in the first position
+        number = eval(@base + input)
       else
-        number = eval(@input)
+        number = eval(input)
     else
       number = 0
       
-    if isFinite(number) then number else 0
+    if isFinite(number) then number else 0 # check if calculation makes sense
 
   @legal_characters: (input) ->
-    if /[^\d^\+^\-^\*^\/]/g.test(input) # if there are other characters than the legal ones...
+    if /[^\d^\+^\-^\*^\/]/g.test(input) # if there are other characters than the legal ones (digits, +, -, * or /)...
       false
     else
       true

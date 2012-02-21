@@ -58,6 +58,11 @@ describe 'Calculator', ->
       calculator = new Calculator('/0',100)
       expect(Calculator.legal_characters(calculator.input)).toEqual true
       expect(calculator.result()).toEqual 0
+    it 'ignores white spaces', ->
+      calculator = new Calculator('+ 50 / 2',100)
+      expect(Calculator.legal_characters(calculator.input)).toEqual false # because the white spaces aren't legal characters in a calculation...
+      expect(calculator.result()).toEqual 125
+    
   # Spec you old split_amount method. Note: I have renamed it to split.
   describe '.split', ->
     it 'splits a number into a given number of parts', ->
