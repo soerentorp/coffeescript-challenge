@@ -1,16 +1,21 @@
 root = exports ? window
 
 class Calculator
-  constructor: (@input) ->
+  constructor: (@input, @base) ->
 
   result: ->
-    if Calculator.legal_characters(@input) # 
-      eval @input
+    if Calculator.legal_characters(@input)
+      if /^[\+\-\*\/]/g.test(@input)
+        number = eval(@base + @input)
+      else
+        number = eval(@input)
     else
-      0
+      number = 0
+      
+    if isFinite(number) then number else 0
 
   @legal_characters: (input) ->
-    if /[^\d^\+^\*^\/]/g.test(input) # if there are other characters than the legal ones...
+    if /[^\d^\+^\-^\*^\/]/g.test(input) # if there are other characters than the legal ones...
       false
     else
       true

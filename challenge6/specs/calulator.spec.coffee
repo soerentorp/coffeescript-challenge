@@ -18,6 +18,10 @@ describe 'Calculator', ->
       calculator = new Calculator('2+3')
       expect(Calculator.legal_characters(calculator.input)).toEqual true
       expect(calculator.result()).toEqual 5
+    it 'can subtract', ->
+      calculator = new Calculator('3-2')
+      expect(Calculator.legal_characters(calculator.input)).toEqual true
+      expect(calculator.result()).toEqual 1
     it 'can multiply', ->
       calculator = new Calculator('2*3')
       expect(Calculator.legal_characters(calculator.input)).toEqual true
@@ -34,8 +38,26 @@ describe 'Calculator', ->
       calculator = new Calculator('2&3')
       expect(Calculator.legal_characters(calculator.input)).toEqual false
       expect(calculator.result()).toEqual 0
-    # ...
-
+    it 'uses the total if the first character is a plus sign', ->
+      calculator = new Calculator('+5',100)
+      expect(Calculator.legal_characters(calculator.input)).toEqual true
+      expect(calculator.result()).toEqual 105
+    it 'uses the total if the first character is a minus sign', ->
+      calculator = new Calculator('-5',100)
+      expect(Calculator.legal_characters(calculator.input)).toEqual true
+      expect(calculator.result()).toEqual 95
+    it 'uses the total if the first character is a multiply sign', ->
+      calculator = new Calculator('*5',100)
+      expect(Calculator.legal_characters(calculator.input)).toEqual true
+      expect(calculator.result()).toEqual 500      
+    it 'uses the total if the first character is a divide sign', ->
+      calculator = new Calculator('/5',100)
+      expect(Calculator.legal_characters(calculator.input)).toEqual true
+      expect(calculator.result()).toEqual 20 
+    it 'returns 0 if the first character is a divide sign and the dividend is 0', ->
+      calculator = new Calculator('/0',100)
+      expect(Calculator.legal_characters(calculator.input)).toEqual true
+      expect(calculator.result()).toEqual 0
   # Spec you old split_amount method. Note: I have renamed it to split.
   describe '.split', ->
     it 'splits a number into a given number of parts', ->
