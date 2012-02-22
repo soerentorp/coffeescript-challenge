@@ -53,7 +53,7 @@ You should see:
 
 Otherwise call for help. ;-)
 
-List the individual test by adding '--verbose' to the command, like so: 'jasmine-node --coffee --verbose specs'.
+List the individual test by adding `--verbose` to the command, like so: `jasmine-node --coffee --verbose specs`.
 
 The challenge
 ------
