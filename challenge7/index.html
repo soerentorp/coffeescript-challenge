@@ -31,7 +31,8 @@
             total = $('#total').val()
             calculator = new Calculator input, total
             if calculator.isValid()
-              $('#result').html calculator.result()
+              $('#result').html input + ' gives ' + calculator.result()
+              $('#input').val(calculator.result())
             else
               $('#result').html(error) for error in calculator.errorsInInput()
     </script>

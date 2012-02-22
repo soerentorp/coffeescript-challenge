@@ -21,7 +21,18 @@ class Calculator
     input.replace(/\s/g, "") # remove white spaces
 
   isValidInput: ->
-    if /[^\d^\+^\-^\*^\/^\(^\)]/g.test @sanetizedInput 
+    regexContainsInvalidCharacters = /// # if the individual character in the input string ...
+      [
+        ^\d # is not digits or
+        ^\+ # is not a plus (+) or
+        ^\- # is not a minus (-) or
+        ^\* # is not a star (*) or
+        ^\/ # is not a slash (/) or
+        ^\( # is not a open bracket ("(") or
+        ^\) # is not a close bracket (")")
+      ]
+    ///g # ... then it is invalid
+    if regexContainsInvalidCharacters.test @sanetizedInput 
       # Regular expression used
       # Any of the characters: [...]
       # Which are not: ^
