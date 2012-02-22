@@ -16,7 +16,7 @@ class Calculator
     if isFinite(number) then number else 0 # check if calculation makes sense
 
   @legal_characters: (input) ->
-    if /[^\d^\+^\-^\*^\/]/g.test(input) # if there are other characters than the legal ones (digits, +, -, * or /)...
+    if /[^\d^\+^\-^\*^\/^\(^\)]/g.test(input) # if there are other characters than the legal ones (digits, +, -, *, /, left or right brackets)...
       false
     else
       true

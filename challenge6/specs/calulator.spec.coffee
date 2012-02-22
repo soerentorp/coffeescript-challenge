@@ -62,6 +62,14 @@ describe 'Calculator', ->
       calculator = new Calculator('+ 50 / 2',100)
       expect(Calculator.legal_characters(calculator.input)).toEqual false # because the white spaces aren't legal characters in a calculation...
       expect(calculator.result()).toEqual 125
+    it 'can calculate with brackets', ->
+      calculator = new Calculator('200 / (1 + 1)')
+      expect(Calculator.legal_characters(calculator.input)).toEqual false # because the white spaces aren't legal characters in a calculation...
+      expect(calculator.result()).toEqual 100
+    it 'can calculate inital Challenge 6 request', ->
+      calculator = new Calculator('200 - 23 + 2 * 34')
+      expect(Calculator.legal_characters(calculator.input)).toEqual false # because the white spaces aren't legal characters in a calculation...
+      expect(calculator.result()).toEqual 245
     
   # Spec you old split_amount method. Note: I have renamed it to split.
   describe '.split', ->
