@@ -5,12 +5,16 @@ class Calculator
 
   result: ->
     input = @input.replace(/\s/g, "") # remove white spaces
-    if Calculator.legal_characters(input)
-      if /^[\+\-\*\/]/g.test(input) # check for + - * / characters in the first position
-        number = eval(@base + input)
+    try
+      if Calculator.legal_characters(input)
+        if /^[\+\-\*\/]/g.test(input) # check for + - * / characters in the first position
+          number = eval(@base + input)
+        else
+          number = eval(input)
       else
-        number = eval(input)
-    else
+        number = 0
+    catch error
+      console.log "Error: " + error.message
       number = 0
       
     if isFinite(number) then number else 0 # check if calculation makes sense
