@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>Tally Calculator</title>
+    <script src="coffee-script.js" type="text/javascript" charset="utf-8"></script>
+    <script src="jquery-1.7.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="calculator.coffee" type="text/coffeescript" charset="utf-8"></script>
+    <link rel="stylesheet" href="./style.css" type="text/css" media="screen" charset="utf-8"/>
+  </head>
+
+  <body>
+    <p>
+      <label for='total'>Total: </label>
+      <input type='text' id='total' value='100' placeholder='Total'>
+    </p>
+    <p>
+      <label for='input'>Input: </label>
+      <input type='text' id='input' placeholder='Number or a formular'>
+      <span class='hint'>Hit enter to calculate</span>
+    </p>
+    <p>
+      <label>Result: </label>
+      <span id='result'></span>
+    </p>
+    <script type="text/coffeescript">
+      $ ->
+        $('#input').keypress (e) ->
+          if e.keyCode == 13
+            input = $(this).val()
+            total = $('#total').val()
+            calculator = new Calculator input, total
+            if calculator.isValid()
+              $('#result').html calculator.result()
+            else
+              $('#result').html 'The input is invalid.'
+    </script>
+  </body>
+</html>
+
