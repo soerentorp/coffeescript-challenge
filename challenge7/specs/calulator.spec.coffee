@@ -11,75 +11,89 @@
 # http://pivotal.github.com/jasmine/
 
 describe 'Calculator', ->
+  errorMessages = ["Invalid input. The input includes some weird characters. It can only include digits, +, -, *, / and brackets ()."]
+  
   describe '#result', ->
     describe 'when a single input is parsed to the calculator', ->
       it 'can add', ->
         calculator = new Calculator('2+3')
-        expect(Calculator.legal_characters(calculator.input)).toEqual true
         expect(calculator.result()).toEqual 5
       it 'can subtract', ->
         calculator = new Calculator('3-2')
-        expect(Calculator.legal_characters(calculator.input)).toEqual true
         expect(calculator.result()).toEqual 1
       it 'can multiply', ->
         calculator = new Calculator('2*3')
-        expect(Calculator.legal_characters(calculator.input)).toEqual true
         expect(calculator.result()).toEqual 6
       it 'can divide', ->
         calculator = new Calculator('3/2')
-        expect(Calculator.legal_characters(calculator.input)).toEqual true
         expect(calculator.result()).toEqual 1.5
       it 'can use brackets', ->
         calculator = new Calculator('200 / (1 + 1)')
-        expect(Calculator.legal_characters(calculator.input)).toEqual false # because the white spaces aren't legal characters in a calculation...
         expect(calculator.result()).toEqual 100
       it 'can use multiple operands (Challenge 6 pass!)', ->
         calculator = new Calculator('200 - 23 + 2 * 34')
-        expect(Calculator.legal_characters(calculator.input)).toEqual false # because the white spaces aren't legal characters in a calculation...
         expect(calculator.result()).toEqual 245
-      it 'returns 0 when letters are included in input string', ->
+      it 'throws an error when letters are included in input string', ->
         calculator = new Calculator('a+3')
-        expect(Calculator.legal_characters(calculator.input)).toEqual false
-        expect(calculator.result()).toEqual 0
-      it 'returns 0 when illegal symbols are included in input string', ->
-        calculator = new Calculator('2&3')
-        expect(Calculator.legal_characters(calculator.input)).toEqual false
-        expect(calculator.result()).toEqual 0
+        expect(-> calculator.result()).toThrow new Error errorMessages
+      it 'throws an error when illegal symbols are included in input string', ->
+        calculator = new Calculator('2&3?!')
+        expect(-> calculator.result()).toThrow new Error errorMessages
+      it 'throws an error when one legal operator is followed by another in the input string', ->
+        calculator = new Calculator('2++5')
+        expect(-> calculator.result()).toThrow new Error errorMessages
+      it 'throws an error when legal operators are not followed by a digit in input string', ->
+        calculator = new Calculator('2+')
+        expect(-> calculator.result()).toThrow new Error errorMessages
+      it 'throws an error when brackets are in input in pairs', ->
+        calculator = new Calculator('2+(5+2')
+        #expect(-> calculator.result()).toThrow new Error errorMessages
+        expect('pending').toEqual('completed')
     
     describe 'when input and total are parsed to the calculator', ->
       describe 'when plus (+) is the first input letter', ->
         it 'adds input to total', ->
           calculator = new Calculator('+5',100)
-          expect(Calculator.legal_characters(calculator.input)).toEqual true
           expect(calculator.result()).toEqual 105
-
       describe 'when minus (-) is first input letter', ->
         it 'subtracts input from total', ->
           calculator = new Calculator('-5',100)
-          expect(Calculator.legal_characters(calculator.input)).toEqual true
           expect(calculator.result()).toEqual 95
-
       describe 'when multiple (*) is first input letter', ->
         it 'multiplies input with total', ->
           calculator = new Calculator('*5',100)
-          expect(Calculator.legal_characters(calculator.input)).toEqual true
           expect(calculator.result()).toEqual 500      
-
       describe 'when divide (/) is first input letter', ->
         it 'divides total with input', ->
           calculator = new Calculator('/5',100)
-          expect(Calculator.legal_characters(calculator.input)).toEqual true
           expect(calculator.result()).toEqual 20 
-        it 'returns 0 if the dividend is 0', ->
+        it 'returns 0 if the dividend is 0 (althought it does not follow math conventions)', ->
           calculator = new Calculator('/0',100)
-          expect(Calculator.legal_characters(calculator.input)).toEqual true
           expect(calculator.result()).toEqual 0
-
       describe 'when white space is included', ->
         it 'ignores it', ->
           calculator = new Calculator('+ 50 / 2',100)
-          expect(Calculator.legal_characters(calculator.input)).toEqual false # because the white spaces aren't legal characters in a calculation...
           expect(calculator.result()).toEqual 125
+          
+  describe '#isValid', ->
+    describe 'when input is valid', ->
+      calculator = new Calculator('2 + 3')
+      it 'returns true', ->
+        expect(calculator.isValid()).toEqual true
+    describe 'when input is invalid', ->
+      calculator = new Calculator('a+3')
+      it 'returns false', ->
+        expect(calculator.isValid()).toEqual false
+        
+  describe '#errorsInInput', ->
+    describe 'when input is valid', ->
+      calculator = new Calculator('2 + 3')
+      it 'returns empty array', ->
+        expect(calculator.errorsInInput()).toEqual []
+    describe 'when input is invalid', ->
+      calculator = new Calculator('a+3')
+      it 'returns array (with error messages)', ->
+        expect(calculator.errorsInInput()).toEqual errorMessages
 
   # Spec you old split_amount method. Note: I have renamed it to split.
   describe '.split', ->

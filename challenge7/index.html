@@ -24,16 +24,16 @@
       <span id='result'></span>
     </p>
     <script type="text/coffeescript">
-      $ ->
+      $ -> # run when entire document is loaded (= DOM ready)
         $('#input').keypress (e) ->
-          if e.keyCode == 13
+          if e.keyCode == 13 # Enter button
             input = $(this).val()
             total = $('#total').val()
             calculator = new Calculator input, total
             if calculator.isValid()
               $('#result').html calculator.result()
             else
-              $('#result').html 'The input is invalid.'
+              $('#result').html(error) for error in calculator.errorsInInput()
     </script>
   </body>
 </html>
