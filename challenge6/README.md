@@ -9,9 +9,9 @@ and get the result right away instead of pulling out their own calculator.
 
 Test setup
 ------
-For this challenge you're going to test you code with Jasmine instead of printing to the console. We're going to have a very simple setup that lets you run your tests in the console.
+For this challenge you're going to test your code with Jasmine instead of printing to the console. We're going to have a very simple setup that lets you run your tests in the console.
 
-To make this work, you need to install jasmine node. So fire up your terminal and type:
+To make this work, you need to install Jasmine Node. So fire up your terminal and type:
 
     cd <path to challenge6>
     npm install jasmine-node
@@ -20,10 +20,6 @@ To see if it works, just type:
 
     jasmine-node
     
-or if it does not work, type:
-    
-     ./node_modules/jasmine-node/bin/jasmine-node
-
 It should return something like this:
 
     USAGE: jasmine-node [--color|--noColor] [--verbose] [--coffee] directory
@@ -35,23 +31,29 @@ It should return something like this:
       .
       .
 
-If not. Call for help ;-)
+If not, type this instead:
+    
+     ./node_modules/jasmine-node/bin/jasmine-node
+
+Still having problems? Call for help. ;-)
 
 Running the tests
 ------
 
-To run you test, inside the `challenge6` dir, type:
+To run your test, inside the `challenge6` dir, type:
 
     jasmine-node --coffee specs
 
-This tells the jasmine-node program at we use coffeescript and our `specs` dir.
+This tells the jasmine-node program that we use coffeescript and our `specs` dir.
 
 You should see:
 
     Finished in 0.002 seconds
     7 tests, 2 assertions, 0 failures
 
-Otherwise call for help ;-)
+Otherwise call for help. ;-)
+
+List the individual test by adding '--verbose' to the command, like so: 'jasmine-node --coffee --verbose specs'.
 
 The challenge
 ------
@@ -60,6 +62,6 @@ Now you're ready to start hacking. Look inside `specs/calulator.spec.coffee` whe
 You should implement the specs that are empty, and make them pass by implementing the code in `calculator.coffee`.
 You should also spec your old `split_amount` method and move it into the calculator.
 
-You get extra credit for implementing cool new features to the calculator, that you would love to use your self.
+You get extra credit for implementing cool new features to the calculator, that you would love to use yourself.
 
 Good luck!
