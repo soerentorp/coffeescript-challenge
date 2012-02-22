@@ -4,7 +4,7 @@ Challenge 7 — Handle invalid input
 You passed challenge 6 with flying colors! Well done! You have used specs very well to document and verify the calcular's behavior. As you'll see in your spec file, I have restructered your specs a little bit.
 
 In this challenge you're going to make the calculator bulletproof, so invalid input is handled gracefully. 
-In the calculator.coffee file there is a new method called isValid. It is your job to implement it so fx:
+In the calculator.coffee file there is a new method called isValid. It is your job to implement it so, for example:
 
     calculator = new Calculator "//3", "100"
     calculator.isValid() # returns false
@@ -15,7 +15,7 @@ The opposite is called "blacklisting". This is where you specify what is invalid
 
 Demo the calculator in the browser
 ------
-You can try out your calculator in the browser. Just open the index.html file. Type in something in the input field and hit enter. It should write the result next to the result label.
+You can try out your calculator in the Safari browser (Chrome complains for the moment). Just open the `index.html` file. Type in something in the input field and hit enter. It should write the result next to the result label.
 
 If not; call for help.
 
