@@ -10,6 +10,11 @@
 # Official Jasmine site: 
 # http://pivotal.github.com/jasmine/
 
+arrayHasSubstring = (theArray, substring) ->
+  for item in theArray
+    if item.indexOf(substring) != -1 then return true # if substring is found in the array item
+  false
+
 describe 'Calculator', ->
   errorMessages = ["Invalid input. The input includes some weird characters. It can only include digits, +, -, *, / and brackets ()."]
   
@@ -35,34 +40,47 @@ describe 'Calculator', ->
         expect(calculator.result()).toEqual 245
       it 'throws an error when letters are included in input string', ->
         calculator = new Calculator('a+3')
-        #expect(-> calculator.result()).toThrow new Error errorMessages
-        calculator.result()
-        expect(calculator.errorsInInput()[0]).toContain 'odd characters'
+        try
+          calculator.result()
+          expect('expected an error').toEqual 'no error was thrown' # TODO: Better formulation
+        catch error
+          expect(error[0]).toContain 'odd characters'
       it 'throws an error when illegal symbols are included in the input string', ->
         calculator = new Calculator('2&3?!')
-        #expect(-> calculator.result()).toThrow new Error errorMessages
-        calculator.result()
-        expect(calculator.errorsInInput()[0]).toContain 'odd characters'
-      it 'throws an error when one legal operator is followed by another in the input string', ->
+        try
+          calculator.result()
+          expect('expected an error').toEqual 'no error was thrown' # TODO: Better formulation
+        catch error
+          expect(arrayHasSubstring error,'odd characters').toBeTruthy()
+      it 'throws an error when one legal operator is followed by another (adjacent) in the input string', ->
         calculator = new Calculator('2++5')
-        #expect(-> calculator.result()).toThrow new Error errorMessages
-        calculator.result()
-        expect(calculator.errorsInInput()[0]).toContain 'adjacent operators'
+        try
+          calculator.result()
+          expect('expected an error').toEqual 'no error was thrown' # TODO: Better formulation
+        catch error
+          expect(arrayHasSubstring error,'adjacent operators').toBeTruthy()
       it 'throws an error when legal operators are not followed by a digit in the input string', ->
         calculator = new Calculator('2+')
-        #expect(-> calculator.result()).toThrow new Error errorMessages
-        calculator.result()
-        expect(calculator.errorsInInput()[0]).toContain 'ends with an operator'
-      xit 'throws an error when brackets are not in pairs in the input string', ->
+        try
+          calculator.result()
+          expect('expected an error').toEqual 'no error was thrown' # TODO: Better formulation
+        catch error
+          expect(arrayHasSubstring error,'ends with an operator').toBeTruthy()
+      it 'throws an error when brackets are not in pairs in the input string', ->
         calculator = new Calculator('2+(5+2')
-        #expect(-> calculator.result()).toThrow new Error errorMessages
-        expect('pending').toEqual('completed')
-      it 'throws an error when illegal symbols and adjacent operators are included in the input string', ->
+        try
+          calculator.result()
+          expect('expected an error').toEqual 'no error was thrown' # TODO: Better formulation
+        catch error
+          expect(arrayHasSubstring error,'something crazy').toBeTruthy()
+      it 'throws multiple errors when multiple rules are broken in the input string', ->
         calculator = new Calculator('2&3++?!')
-        #expect(-> calculator.result()).toThrow new Error errorMessages
-        calculator.result()
-        expect(calculator.errorsInInput()[0]).toContain 'odd characters'        
-        expect(calculator.errorsInInput()[1]).toContain 'adjacent operators'        
+        try
+          calculator.result()
+          expect('expected an error').toEqual 'no error was thrown' # TODO: Better formulation
+        catch error
+            expect(arrayHasSubstring error,'odd characters').toBeTruthy() 
+            expect(arrayHasSubstring error,'adjacent operators').toBeTruthy()
   
     describe 'when input and total are parsed to the calculator', ->
       describe 'when plus (+) is the first input letter', ->
@@ -98,6 +116,15 @@ describe 'Calculator', ->
       calculator = new Calculator('a+3')
       it 'returns false', ->
         expect(calculator.isValid()).toEqual false
+    describe 'when #isValid is called multiple times', ->
+      it 'does not duplicate error messages', ->
+        calculator = new Calculator('2&3?!')
+        calculator.isValid()
+        calculator.isValid()
+        errors = calculator.errorsInInput()
+        console.log errors
+        error = errors.shift()
+        expect(errors).not.toContain error
         
   describe '#errorsInInput', ->
     describe 'when input is valid', ->

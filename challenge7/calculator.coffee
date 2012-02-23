@@ -14,21 +14,23 @@ class Calculator
     if @isValidInput()
       result = @calculateValidInput()
       if isFinite(result) then result else 0 # check if calculation makes sense
-    # else
-    #   throw new Error @errorsInInput() # Throw an exception for the programmer
+    else
+      throw @errorsInInput() # Throw an exception for the programmer
 
   sanetizeInput: (input) ->
     input.replace(/\s/g, "") # remove white spaces
 
   isValidInput: ->
-    regexContainsInvalidCharacters = /// # The string contains invalid characters -
+    @resetErrors() # to avoid duplicated error messages
+    regexContainsInvalidCharacters = /// # The string contains invalid characters (is there a character which is neither of the following?) -
       [ # - if the individual character is -
-        ^\d # not a digit (0-9)
-        ^\+ # not a plus (+)
-        ^\- # not a minus (-)
-        ^\* # not a star (*)
-        ^\/ # not a slash (/)
-        ^\( # not an open bracket "("
+        ^\d # not a digit (0-9) and
+        ^\+ # not a plus (+) and
+        ^\- # not a minus (-) and
+        ^\* # not a star (*) and
+        ^\/ # not a slash (/) and
+        ^\. # not a dot (.) and
+        ^\( # not an open bracket "(" and
         ^\) # not a close bracket ")"
       ]
     /// 
@@ -60,7 +62,13 @@ class Calculator
     if regexContainsOperatorAtEnd.test @sanetizedInput # Use of operator at the end
       isValid = false
       @addError 'Invalid input. The input ends with an operator (+, -, * or /). The calculator does not know how to handle this. Would you?'
-    isValid
+    try
+      @resultValue = @calculateValidInput()
+    catch error
+      @addError "You did something crazy that Cal does not know how to handle. '#{error.toString()},' he says."
+      isValid = false
+    finally
+      return isValid
       
   errorsInInput: ->
     @errors
@@ -68,15 +76,15 @@ class Calculator
   addError: (errorMessage) ->
     @errors.push errorMessage
     #console.log 'Error recorded for ' + @input + ' (' + errorMessage + ')'
+    
+  resetErrors: ->
+    @errors = []
 
   calculateValidInput: ->
-    try
-      if /^[\+\-\*\/]/.test @sanetizedInput # check for + - * / characters in the first position
-        eval @base + @sanetizedInput
-      else
-        eval @sanetizedInput
-    catch error
-      @addError error.toSring()
+    if /^[\+\-\*\/]/.test @sanetizedInput # check for + - * / characters in the first position TODO: Make more strutable
+      eval @base + @sanetizedInput
+    else
+      eval @sanetizedInput
 
   @split: (number, parts) -> 
     number = parseFloat(number)

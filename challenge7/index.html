@@ -20,10 +20,17 @@
       <span class='hint'>Hit enter to calculate</span>
     </p>
     <p>
-      <label>Result: </label>
-      <span id='result'></span>
+      <label>Cal's response: </label>
+      <div id='result'></div>
     </p>
     <script type="text/coffeescript">
+      listErrors = (errorsArray) ->
+        out = 'Whoops, Cal coughed:'
+        out += '<ol>'
+        for error in errorsArray
+          out += "<li>#{error}</li>"
+        out += '</ol>'
+        
       $ -> # run when entire document is loaded (= DOM ready)
         $('#input').keypress (e) ->
           if e.keyCode == 13 # Enter button
@@ -34,7 +41,7 @@
               $('#result').html input + ' gives ' + calculator.result()
               $('#input').val(calculator.result())
             else
-              $('#result').html(error) for error in calculator.errorsInInput()
+              $('#result').html listErrors(calculator.errorsInInput())
     </script>
   </body>
 </html>
