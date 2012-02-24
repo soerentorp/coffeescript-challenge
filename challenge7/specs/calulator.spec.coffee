@@ -10,14 +10,12 @@
 # Official Jasmine site: 
 # http://pivotal.github.com/jasmine/
 
-arrayHasSubstring = (theArray, substring) ->
+arrayHasSubstring = (theArray, substring) -> # finds a substring in the array items
   for item in theArray
     if item.indexOf(substring) != -1 then return true # if substring is found in the array item
   false
 
 describe 'Calculator', ->
-  errorMessages = ["Invalid input. The input includes some weird characters. It can only include digits, +, -, *, / and brackets ()."]
-  
   describe '#result', ->
     describe 'when a single input is parsed to the calculator', ->
       it 'can add', ->
@@ -133,10 +131,10 @@ describe 'Calculator', ->
         expect(calculator.errorsInInput()).toEqual []
     describe 'when input is invalid', ->
       calculator = new Calculator('a+3')
-      xit 'returns array (with error messages)', ->
-        expect(calculator.errorsInInput()).toEqual errorMessages
+      it 'returns array (with error messages)', ->
+        calculator.isValid()
+        expect(calculator.errorsInInput().length).toBeGreaterThan 0
 
-  # Spec you old split_amount method. Note: I have renamed it to split.
   describe '.split', ->
     it 'splits a number into a given number of parts', ->
       expect(Calculator.split(100, 2)).toEqual 50
