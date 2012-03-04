@@ -19,12 +19,10 @@ class Calculator
 
   sanetizeInput: (input) ->
     sanetizedInput = input
-    sanetizedInput = sanetizedInput.replace(/\s/g, "") # remove white spaces
-    if /\./.test(sanetizedInput) and /\,/.test(sanetizedInput) # both a dot (.) and a comma (,)?
-      console.log "Bingo, we've got a problem. (#{sanetizedInput})" # We got a problem
-      sanetizedInput = @sanetizeDotsAndCommas(sanetizedInput)
-    else if  /\,/.test(sanetizedInput) # only commas
-      sanetizedInput = sanetizedInput.replace(/\,/g,".") # replace commas (,) with dots (.)
+    sanetizedInput = sanetizedInput.replace(/\s/g, "") # remove white spaces (spaces, tabs, and line breaks)
+    #if /\./.test(sanetizedInput) and /\,/.test(sanetizedInput) # both a dot (.) and a comma (,)?
+      #console.log "Bingo, we've got a problem. (#{sanetizedInput})" # We got a problem
+    sanetizedInput = @sanetizeDotsAndCommas(sanetizedInput)
     sanetizedInput
 
   isValidInput: ->
@@ -94,21 +92,20 @@ class Calculator
       eval @sanetizedInput
     
   # ------------- FUNCTIONS FOR SANITIZING INPUT -------------------- >>>
-
   sanetizeDotsAndCommas: (input) ->
     numbers = []
     sanetizedInput = input
     numbers = @numbersInString(input)
     #console.log numbers
     for number in numbers
-      sanetizedNumber = @partBeforeDecimal(number) + @partFromDecimal(number)
+      sanetizedNumber = @numberWithOneOrNoDelimiter(number)
       if (isCriticalNumber = @isCriticalNumber(sanetizedNumber))
         if not @isProbableNumber(sanetizedNumber)
           numberWitoutDecimal = @numberWitoutDecimal(sanetizedNumber)
           if @isProbableNumber(numberWitoutDecimal)
             sanetizedNumber = numberWitoutDecimal
       sanetizedInput = sanetizedInput.replace(number,sanetizedNumber)
-      #console.log "'#{number}' #{@partBeforeDecimal(number)}+#{@partFromDecimal(number)} result: #{sanetizedNumber} (is critical? #{isCriticalNumber})"
+      #console.log "'#{number}' #{@partBeforeDecimal(number)}+#{@partFromDecimal(number)} result: #{sanetizedNumber} (is critical? #{isCriticalNumber} / same delimiter? #{@sameDelimiterUsedMultpleTimes(number)})"
     #console.log "FINAL sanitized string: #{sanetizedInput}"
     sanetizedInput
   numbersInString: (input) ->
@@ -116,6 +113,20 @@ class Calculator
       [\+\-\*\/]
       ///g
     String(input).split(regexOperators)
+    
+  numberWithOneOrNoDelimiter: (input) ->
+    if @sameDelimiterUsedMultpleTimes(input)
+      @removeByRegex(input,/[\.\,]/g)
+    else
+      @partBeforeDecimal(input) + @partFromDecimal(input)
+    
+  sameDelimiterUsedMultpleTimes: (input) ->
+    if (/\..*\./g.test(input) and not /\,/.test(input)) # if one dot is followed by another without any commas involved
+      true
+    else if (/\,.*\,/g.test(input) and not /\./g.test(input)) # if or one comma by another without any dots
+      true
+    else
+      false 
     
   partFromDecimal: (input) ->
     regexFirstDecimaFromRight = /[\.\,]\d*$/ # ASK: Should be global variable?

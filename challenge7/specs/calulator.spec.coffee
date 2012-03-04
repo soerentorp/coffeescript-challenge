@@ -102,6 +102,8 @@ describe 'Calculator', ->
           expect(calculator.result()).toEqual 0
           
     describe 'when the input contains noise', ->
+      # TODO: Make sure it handles brackets () properly
+
       describe 'when white space is included', ->
         it 'ignores it', ->
           calculator = new Calculator('+ 50 / 2',100)
@@ -115,6 +117,9 @@ describe 'Calculator', ->
         it 'replaces the commas (,) with dots (.)', ->
           calculator = new Calculator('2,554+2,447',100)
           expect(new Number(calculator.result().toFixed(3))).toEqual 5.001 # ASK: Apparently '2.554+2.447' = 5.000999999994 !?
+        it 'handles millions fine', ->
+          calculator = new Calculator('1,554,447+543.50',100)
+          expect(calculator.result()).toEqual 1554990.5 
       describe 'when both dots and commas are included', ->
         it 'replaces the commas (,) with dots (.) for numbers wihtin 2 and 2000 ', ->
           calculator = new Calculator('2,554+2.447',100)
