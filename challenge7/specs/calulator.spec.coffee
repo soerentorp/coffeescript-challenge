@@ -100,10 +100,38 @@ describe 'Calculator', ->
         it 'returns 0 if the dividend is 0 (althought it does not follow math conventions)', ->
           calculator = new Calculator('/0',100)
           expect(calculator.result()).toEqual 0
+          
+    describe 'when the input contains noise', ->
       describe 'when white space is included', ->
         it 'ignores it', ->
           calculator = new Calculator('+ 50 / 2',100)
           expect(calculator.result()).toEqual 125
+          
+      describe 'when only dots (.) are included', ->
+        it 'uses dots as decimal delimeter', ->
+          calculator = new Calculator('2.554',100)
+          expect(calculator.result()).toEqual 2.554
+      describe 'when only commas (,) are included', ->
+        it 'replaces the commas (,) with dots (.)', ->
+          calculator = new Calculator('2,554+2,447',100)
+          expect(new Number(calculator.result().toFixed(3))).toEqual 5.001 # ASK: Apparently '2.554+2.447' = 5.000999999994 !?
+      describe 'when both dots and commas are included', ->
+        it 'replaces the commas (,) with dots (.) for numbers wihtin 2 and 2000 ', ->
+          calculator = new Calculator('2,554+2.447',100)
+          expect(new Number(calculator.result().toFixed(3))).toEqual 5.001 # ASK: Apparently '2.554+2.447' = 5.000999999994 !?
+        it 'converts each number based on an individual assessment', ->
+          calculator = new Calculator('1,554+2.447',100)
+          expect(calculator.result()).toEqual 1556.447
+        it 'can convert all numbers in a long input string', ->
+          calculator = new Calculator('3,335+8.8/2+1.025+2.025+3.05+2,510,055.687+52',100)
+          expect(calculator.result()).toEqual 2511145.497
+        describe 'when several dots and/or commas are used in a number', ->
+          it 'uses the dot the most to the right', ->
+            calculator = new Calculator('1,554.447',100)
+            expect(calculator.result()).toEqual 1554.447
+          it 'uses the comma the most to the right', ->
+            calculator = new Calculator('1.554,447',100)
+            expect(calculator.result()).toEqual 1554.447
           
   describe '#isValid', ->
     describe 'when input is valid', ->
@@ -120,7 +148,6 @@ describe 'Calculator', ->
         calculator.isValid()
         calculator.isValid()
         errors = calculator.errorsInInput()
-        console.log errors
         error = errors.shift()
         expect(errors).not.toContain error
         

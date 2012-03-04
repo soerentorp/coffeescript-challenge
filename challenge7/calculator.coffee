@@ -18,7 +18,14 @@ class Calculator
       throw @errorsInInput() # Throw an exception for the programmer
 
   sanetizeInput: (input) ->
-    input.replace(/\s/g, "") # remove white spaces
+    sanetizedInput = input
+    sanetizedInput = sanetizedInput.replace(/\s/g, "") # remove white spaces
+    if /\./.test(sanetizedInput) and /\,/.test(sanetizedInput) # both a dot (.) and a comma (,)?
+      console.log "Bingo, we've got a problem. (#{sanetizedInput})" # We got a problem
+      sanetizedInput = @sanetizeDotsAndCommas(sanetizedInput)
+    else if  /\,/.test(sanetizedInput) # only commas
+      sanetizedInput = sanetizedInput.replace(/\,/g,".") # replace commas (,) with dots (.)
+    sanetizedInput
 
   isValidInput: ->
     @resetErrors() # to avoid duplicated error messages
@@ -55,7 +62,7 @@ class Calculator
     isValid = true
     if regexContainsInvalidCharacters.test @sanetizedInput # Use of invalid characters
       isValid = false
-      @addError 'Invalid input. The input includes some odd characters. It can only include digits (0-9), plus (+), minus (-), star (*), slash (/) and brackets "(" or ")."'
+      @addError "Invalid input. The input includes some odd characters. It can only include digits (0-9), plus (+), minus (-), star (*), slash (/) and brackets \"(\" or \").\""
     if regexContainsAdjacentOperators.test @sanetizedInput # Use of adjacent operators
       isValid = false
       @addError 'Invalid input. The input includes two adjacent operators (+, -, * or /) which the calculator do not know how to handle.'
@@ -85,7 +92,65 @@ class Calculator
       eval @base + @sanetizedInput
     else
       eval @sanetizedInput
+    
+  # ------------- FUNCTIONS FOR SANITIZING INPUT -------------------- >>>
 
+  sanetizeDotsAndCommas: (input) ->
+    numbers = []
+    sanetizedInput = input
+    numbers = @numbersInString(input)
+    #console.log numbers
+    for number in numbers
+      sanetizedNumber = @partBeforeDecimal(number) + @partFromDecimal(number)
+      if (isCriticalNumber = @isCriticalNumber(sanetizedNumber))
+        if not @isProbableNumber(sanetizedNumber)
+          numberWitoutDecimal = @numberWitoutDecimal(sanetizedNumber)
+          if @isProbableNumber(numberWitoutDecimal)
+            sanetizedNumber = numberWitoutDecimal
+      sanetizedInput = sanetizedInput.replace(number,sanetizedNumber)
+      #console.log "'#{number}' #{@partBeforeDecimal(number)}+#{@partFromDecimal(number)} result: #{sanetizedNumber} (is critical? #{isCriticalNumber})"
+    #console.log "FINAL sanitized string: #{sanetizedInput}"
+    sanetizedInput
+  numbersInString: (input) ->
+    regexOperators = ///
+      [\+\-\*\/]
+      ///g
+    String(input).split(regexOperators)
+    
+  partFromDecimal: (input) ->
+    regexFirstDecimaFromRight = /[\.\,]\d*$/ # ASK: Should be global variable?
+    part = regexFirstDecimaFromRight.exec input
+    sanetizedPart = part.toString().replace(/[\,]/g,'.') if part? # dots are used as decimals by standard
+    if sanetizedPart? then sanetizedPart else ''
+        
+  partBeforeDecimal: (input) ->
+    regexFirstDecimaFromRight = /[\.\,]\d*$/ # ASK: Should be global variable?
+    part = @removeByRegex(input,regexFirstDecimaFromRight)
+    sanetizedPart = @removeByRegex(part,/[\,\.]/g) # remove all potential decimals (dots or commas)
+    if sanetizedPart? then sanetizedPart else ''
+    
+  removeByRegex: (input, regex) ->
+    input.toString().replace(regex,'') if input?
+    
+  isCriticalNumber: (input) ->
+    regexCriticalNumber = ///
+      \d+ # one or more digits
+      [\.\,] # and a dot (.) or comma (,)
+      \d{3} # and 3 digits
+      # (?:\D|$) # and a non-digit or end of string
+      ///
+    regexCriticalNumber.test input
+    
+  numberWitoutDecimal: (input) ->
+    input.replace(/[\,\.]/g,'')
+    
+  isProbableNumber: (number) -> # A subjective estimate of whether the number is within a reasonable interval
+    bottomBoarder = 2 # equalling and interval between 2 and 2000 in the used currency ASK: Global variable to be set when the Calculator is setup on site?
+    topBoarder = bottomBoarder * 1000
+    number >= bottomBoarder and number < (topBoarder)
+    
+
+  # <<< --------- FUNCTIONS FOR SANITIZING INPUT ------------------------
   @split: (number, parts) -> 
     number = parseFloat(number)
     parts = parseInt(parts)
