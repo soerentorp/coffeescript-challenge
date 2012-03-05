@@ -137,6 +137,8 @@ describe 'Calculator', ->
           it 'uses the comma the most to the right', ->
             calculator = new Calculator('1.554,447',100)
             expect(calculator.result()).toEqual 1554.447
+            
+          # Failing test '1,55+1,550'
           
   describe '#isValid', ->
     describe 'when input is valid', ->
@@ -166,6 +168,36 @@ describe 'Calculator', ->
       it 'returns array (with error messages)', ->
         calculator.isValid()
         expect(calculator.errorsInInput().length).toBeGreaterThan 0
+        
+  describe '#format', ->
+    describe 'when input is an integer > 1000', ->
+      calculator = new Calculator('1500250')
+      it 'returns a string with thousand delimiters', ->
+        expect(calculator.formattedResult(0)).toEqual '1,500,250'
+    describe 'when input is a float', ->
+      it 'returns a rounded number', ->
+        calculator = new Calculator('250.495')
+        expect(calculator.formattedResult(2)).toEqual '250.50'
+    describe 'when input is a float and > 1000', ->
+      it 'returns a string with a rounded number with thousand delimiters', ->
+        calculator = new Calculator('1500250.495')        
+        expect(calculator.formattedResult(2)).toEqual '1,500,250.50'
+    describe 'when input has operands', ->
+      calculator = new Calculator('5+5')        
+      it 'returns calculated result', ->
+        expect(calculator.formattedResult(0)).toEqual '10'
+    describe 'when no decimal places is given', ->
+      calculator = new Calculator('3')  
+      it 'defaults to 2 decimal places', ->
+        expect(calculator.formattedResult()).toEqual '3.00'
+        
+    describe 'when input is invalid', ->
+      calculator = new Calculator('invalid')
+      it 'throws an error', ->
+        try
+          calculator.formattedResult()
+          expect('expected an error').toEqual 'no error was thrown' # TODO: Better formulation
+
 
   describe '.split', ->
     it 'splits a number into a given number of parts', ->

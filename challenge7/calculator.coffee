@@ -108,6 +108,7 @@ class Calculator
       #console.log "'#{number}' #{@partBeforeDecimal(number)}+#{@partFromDecimal(number)} result: #{sanetizedNumber} (is critical? #{isCriticalNumber} / same delimiter? #{@sameDelimiterUsedMultpleTimes(number)})"
     #console.log "FINAL sanitized string: #{sanetizedInput}"
     sanetizedInput
+    
   numbersInString: (input) ->
     regexOperators = ///
       [\+\-\*\/]
@@ -148,7 +149,6 @@ class Calculator
       \d+ # one or more digits
       [\.\,] # and a dot (.) or comma (,)
       \d{3} # and 3 digits
-      # (?:\D|$) # and a non-digit or end of string
       ///
     regexCriticalNumber.test input
     
@@ -159,9 +159,35 @@ class Calculator
     bottomBoarder = 2 # equalling and interval between 2 and 2000 in the used currency ASK: Global variable to be set when the Calculator is setup on site?
     topBoarder = bottomBoarder * 1000
     number >= bottomBoarder and number < (topBoarder)
-    
 
   # <<< --------- FUNCTIONS FOR SANITIZING INPUT ------------------------
+  
+  
+  formattedResult: (decimalPlaces) ->
+    @format @result(@input), decimalPlaces
+
+  format: (number,decimalPlaces) ->
+    @addDelimiters @roundNumber(number,decimalPlaces)
+    
+  roundNumber: (number,decimalPlaces = 2) ->
+    number.toFixed(decimalPlaces)  
+    
+  addDelimiters: (number) ->
+    regexSplitByThirdDigit = ///
+      (?= # zero-width positive lookahead ("Matches only the position. It does not consume any characters or expand the match." /regular-expressions.info)
+        (?: # do not create a backreference so that the content can be used later in regex or e.g. replacement
+          \d{3} # three digits
+        )
+        + # one or more
+        (?: # do not create a backreference so that the content can be used later in regex or e.g. replacement
+          \. # dot
+          | # or
+        $) # end of string
+      )
+      ///g
+    number.toString().split(regexSplitByThirdDigit).join( "," )
+    
+  
   @split: (number, parts) -> 
     number = parseFloat(number)
     parts = parseInt(parts)
